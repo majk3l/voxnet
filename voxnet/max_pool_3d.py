@@ -69,8 +69,7 @@ def max_pool_3d(input, ds, ignore_border=False):
     input_4D = T.reshape(input, new_shape, ndim=4)
 
     # downsample mini-batch of videos in rows and cols
-    op = T.signal.downsample.DownsampleFactorMax((ds[1], ds[2]), ignore_border)
-    output = op(input_4D)
+    output = T.signal.pool.pool_2d(input_4D, (ds[1], ds[2]), ignore_border)
     # restore to original shape
     outshape = T.join(0, input.shape[:-2], output.shape[-2:])
     out = T.reshape(output, outshape, ndim=input.ndim)
@@ -93,8 +92,7 @@ def max_pool_3d(input, ds, ignore_border=False):
                        'int32')
     input_4D_time = T.reshape(input_time, new_shape, ndim=4)
     # downsample mini-batch of videos in time
-    op = T.signal.downsample.DownsampleFactorMax((1, ds[0]), ignore_border)
-    outtime = op(input_4D_time)
+    outtime = T.signal.pool.pool_2d(input_4D_time, (1, ds[0]), ignore_border)
     # output
     # restore to original shape (xxx, rows, cols, time)
     outshape = T.join(0, input_time.shape[:-2], outtime.shape[-2:])

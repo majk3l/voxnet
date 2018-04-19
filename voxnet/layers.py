@@ -22,8 +22,8 @@ from .max_pool_3d import max_pool_3d
 import theano
 import theano.tensor as T
 from theano.tensor.nnet import conv3d2d
-from theano.sandbox.cuda.basic_ops import gpu_contiguous
-from theano.sandbox.cuda.blas import GpuCorr3dMM
+from theano.gpuarray.basic_ops import gpu_contiguous
+from theano.gpuarray.blas import GpuCorr3dMM
 
 floatX = theano.config.floatX
 
@@ -181,7 +181,7 @@ class Conv3dMMLayer(Layer):
             self.b = None
         else:
             self.b = self.add_param(b, (num_filters,), name='b', regularizable=False)
-        self.corr_mm_op = GpuCorr3dMM(subsample=self.strides, pad=self.pad)
+        self.corr_mm_op = GpuCorr3dMM(subsample=self.strides, border_mode='valid')
 
     def get_W_shape(self):
         # out in t01
